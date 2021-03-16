@@ -1,6 +1,6 @@
-# Ubieda's NCS
+# Ubieda's NCS repo
 
-This repository contains libraries tests and application code used for learning and exploring implementation alternatives within Nordic Connect SDK.
+This repository contains libraries, tests and application code used for learning and exploring implementation alternatives within Nordic Connect SDK.
 
 ## Author(s)
 
