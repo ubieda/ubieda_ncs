@@ -97,7 +97,7 @@ static void app_print_bt_addr(void)
 
 	bt_id_get(&dev_addr, &no_of_identities);
 
-	char bt_addr_str[40] = {0};
+	char bt_addr_str[BT_ADDR_LE_STR_LEN];
 
 	int err = bt_addr_le_to_str(&dev_addr,bt_addr_str,sizeof(bt_addr_str));
 	if(err > 0){
@@ -144,8 +144,6 @@ void main(void)
 	}
 
 	printk("Advertising successfully started\n");
-
-	// __ASSERT(err == 58,"Testing assertions, err: %d\n",err);
 
 	for (;;) {
 		dk_set_led(RUN_STATUS_LED, (++blink_status) % 2);
