@@ -1,0 +1,13 @@
+*.o
+*.d
+*.cmd
+*.log
+*.pyc
+*.swp
+*.swo
+*~
+build
+build-*
+build_*
+cscope.*
+.dir
