@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
  */
 
-#ifndef BT_NUS_CLIENT_H_
-#define BT_NUS_CLIENT_H_
+#ifndef BT_CX_ENDPOINT_CLIENT_H_
+#define BT_CX_ENDPOINT_CLIENT_H_
 
 /**
  * @file
- * @defgroup bt_nus_client Bluetooth LE GATT NUS Client API
+ * @defgroup bt_cx_endpoint_client Bluetooth LE GATT CX_ENDPOINT Client API
  * @{
- * @brief API for the Bluetooth LE GATT Nordic UART Service (NUS) Client.
+ * @brief API for the Bluetooth LE GATT Nordic UART Service (CX_ENDPOINT) Client.
  */
 
 #ifdef __cplusplus
@@ -25,29 +25,29 @@ extern "C" {
 /** @brief Handles on the connected peer device that are needed to interact with
  * the device.
  */
-struct bt_nus_client_handles {
+struct bt_cx_endpoint_client_handles {
 
-        /** Handle of the NUS RX characteristic, as provided by
+        /** Handle of the CX_ENDPOINT RX characteristic, as provided by
 	 *  a discovery.
          */
 	uint16_t rx;
 
-        /** Handle of the NUS TX characteristic, as provided by
+        /** Handle of the CX_ENDPOINT TX characteristic, as provided by
 	 *  a discovery.
          */
 	uint16_t tx;
 
-        /** Handle of the CCC descriptor of the NUS TX characteristic,
+        /** Handle of the CCC descriptor of the CX_ENDPOINT TX characteristic,
 	 *  as provided by a discovery.
          */
 	uint16_t tx_ccc;
 };
 
-/** @brief NUS Client callback structure. */
-struct bt_nus_client_cb {
+/** @brief CX_ENDPOINT Client callback structure. */
+struct bt_cx_endpoint_client_cb {
 	/** @brief Data received callback.
 	 *
-	 * The data has been received as a notification of the NUS TX
+	 * The data has been received as a notification of the CX_ENDPOINT TX
 	 * Characteristic.
 	 *
 	 * @param[in] data Received data.
@@ -60,7 +60,7 @@ struct bt_nus_client_cb {
 
 	/** @brief Data sent callback.
 	 *
-	 * The data has been sent and written to the NUS RX Characteristic.
+	 * The data has been sent and written to the CX_ENDPOINT RX Characteristic.
 	 *
 	 * @param[in] err ATT error code.
 	 * @param[in] data Transmitted data.
@@ -75,8 +75,8 @@ struct bt_nus_client_cb {
 	void (*unsubscribed)(void);
 };
 
-/** @brief NUS Client structure. */
-struct bt_nus_client {
+/** @brief CX_ENDPOINT Client structure. */
+struct bt_cx_endpoint_client {
 
         /** Connection object. */
 	struct bt_conn *conn;
@@ -87,87 +87,32 @@ struct bt_nus_client {
         /** Handles on the connected peer device that are needed
          * to interact with the device.
          */
-	struct bt_nus_client_handles handles;
+	struct bt_cx_endpoint_client_handles handles;
 
-        /** GATT subscribe parameters for NUS TX Characteristic. */
+        /** GATT subscribe parameters for CX_ENDPOINT TX Characteristic. */
 	struct bt_gatt_subscribe_params tx_notif_params;
 
-        /** GATT write parameters for NUS RX Characteristic. */
+        /** GATT write parameters for CX_ENDPOINT RX Characteristic. */
 	struct bt_gatt_write_params rx_write_params;
 
         /** Application callbacks. */
-	struct bt_nus_client_cb cb;
+	struct bt_cx_endpoint_client_cb cb;
 };
 
-/** @brief NUS Client initialization structure. */
-struct bt_nus_client_init_param {
+/** @brief CX_ENDPOINT Client initialization structure. */
+struct bt_cx_endpoint_client_init_param {
 
         /** Callbacks provided by the user. */
-	struct bt_nus_client_cb cb;
+	struct bt_cx_endpoint_client_cb cb;
 };
 
-/** @brief Initialize the NUS Client module.
- *
- * This function initializes the NUS Client module with callbacks provided by
- * the user.
- *
- * @param[in,out] nus    NUS Client instance.
- * @param[in] init_param NUS Client initialization parameters.
- *
- * @retval 0 If the operation was successful.
- *           Otherwise, a negative error code is returned.
- */
-int bt_nus_client_init(struct bt_nus_client *nus,
-		       const struct bt_nus_client_init_param *init_param);
-
-/** @brief Send data to the server.
- *
- * This function writes to the RX Characteristic of the server.
- *
- * @note This procedure is asynchronous. Therefore, the data to be sent must
- * remain valid while the function is active.
- *
- * @param[in,out] nus NUS Client instance.
- * @param[in] data Data to be transmitted.
- * @param[in] len Length of data.
- *
- * @retval 0 If the operation was successful.
- *           Otherwise, a negative error code is returned.
- */
-int bt_nus_client_send(struct bt_nus_client *nus, const uint8_t *data,
+int bt_cx_endpoint_client_init(struct bt_cx_endpoint_client *cx_endpoint,
+		       const struct bt_cx_endpoint_client_init_param *init_param);
+int bt_cx_endpoint_client_send(struct bt_cx_endpoint_client *cx_endpoint, const uint8_t *data,
 		       uint16_t len);
-
-/** @brief Assign handles to the NUS Client instance.
- *
- * This function should be called when a link with a peer has been established
- * to associate the link to this instance of the module. This makes it
- * possible to handle several links and associate each link to a particular
- * instance of this module. The GATT attribute handles are provided by the
- * GATT DB discovery module.
- *
- * @param[in] dm Discovery object.
- * @param[in,out] nus NUS Client instance.
- *
- * @retval 0 If the operation was successful.
- * @retval (-ENOTSUP) Special error code used when UUID
- *         of the service does not match the expected UUID.
- * @retval Otherwise, a negative error code is returned.
- */
-int bt_nus_handles_assign(struct bt_gatt_dm *dm,
-			  struct bt_nus_client *nus);
-
-/** @brief Request the peer to start sending notifications for the TX
- *	   Characteristic.
- *
- * This function enables notifications for the NUS TX Characteristic at the peer
- * by writing to the CCC descriptor of the NUS TX Characteristic.
- *
- * @param[in,out] nus NUS Client instance.
- *
- * @retval 0 If the operation was successful.
- *           Otherwise, a negative error code is returned.
- */
-int bt_nus_subscribe_receive(struct bt_nus_client *nus);
+int bt_cx_endpoint_handles_assign(struct bt_gatt_dm *dm,
+			  struct bt_cx_endpoint_client *cx_endpoint);
+int bt_cx_endpoint_subscribe_receive(struct bt_cx_endpoint_client *cx_endpoint);
 
 #ifdef __cplusplus
 }
@@ -177,4 +122,4 @@ int bt_nus_subscribe_receive(struct bt_nus_client *nus);
  * @}
  */
 
-#endif /* BT_NUS_CLIENT_H_ */
+#endif /* BT_CX_ENDPOINT_CLIENT_H_ */

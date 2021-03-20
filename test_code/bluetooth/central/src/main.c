@@ -4,10 +4,6 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
  */
 
-/** @file
- *  @brief Nordic UART Service Client sample
- */
-
 #include <errno.h>
 #include <zephyr.h>
 #include <sys/byteorder.h>
@@ -32,11 +28,7 @@
 
 #include <dk_buttons_and_leds.h>
 
-#define LOG_MODULE_NAME central_uart
-LOG_MODULE_REGISTER(LOG_MODULE_NAME);
-
-/* UART payload buffer element size. */
-// #define UART_BUF_SIZE 20
+LOG_MODULE_REGISTER(app, CONFIG_LOG_DEFAULT_LEVEL);
 
 #define RUN_STATUS_LED          DK_LED1
 #define CON_STATUS_LED          DK_LED2
@@ -48,27 +40,8 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME);
 
 #define DEVICE_NAME_FILTER      "CX-Peripheral"
 
-#define NUS_WRITE_TIMEOUT K_MSEC(150)
-#define UART_WAIT_FOR_BUF_DELAY K_MSEC(50)
-#define UART_RX_TIMEOUT 50
-
 static struct bt_conn *default_conn;
-static struct bt_nus_client nus_client;
-
-static void ble_data_sent(uint8_t err, const uint8_t *const data, uint16_t len)
-{
-	// struct uart_data_t *buf;
-
-	// /* Retrieve buffer context. */
-	// buf = CONTAINER_OF(data, struct uart_data_t, data);
-	// k_free(buf);
-
-	// k_sem_give(&nus_write_sem);
-
-	// if (err) {
-	// 	LOG_WRN("ATT error code: 0x%02X", err);
-	// }
-}
+static struct bt_cx_endpoint_client cx_endpoint_client;
 
 static uint8_t ble_data_received(const uint8_t *const data, uint16_t len)
 {
@@ -83,13 +56,13 @@ static uint8_t ble_data_received(const uint8_t *const data, uint16_t len)
 static void discovery_complete(struct bt_gatt_dm *dm,
 			       void *context)
 {
-	struct bt_nus_client *nus = context;
+	struct bt_cx_endpoint_client *cx_endpoint = context;
 	LOG_INF("Service discovery completed");
 
 	bt_gatt_dm_data_print(dm);
 
-	bt_nus_handles_assign(dm, nus);
-	bt_nus_subscribe_receive(nus);
+	bt_cx_endpoint_handles_assign(dm, cx_endpoint);
+	bt_cx_endpoint_subscribe_receive(cx_endpoint);
 
 	bt_gatt_dm_data_release(dm);
 }
@@ -124,7 +97,7 @@ static void gatt_discover(struct bt_conn *conn)
 	err = bt_gatt_dm_start(conn,
 			       BT_UUID_CX_ENDPOINT,
 			       &discovery_cb,
-			       &nus_client);
+			       &cx_endpoint_client);
 	if (err) {
 		LOG_ERR("could not start the discovery procedure, error "
 			"code: %d", err);
@@ -158,12 +131,7 @@ static void connected(struct bt_conn *conn, uint8_t conn_err)
 
 	LOG_INF("Connected: %s", log_strdup(addr));
 
-	// err = bt_conn_set_security(conn, BT_SECURITY_L2);
-	// if (err) {
-	// 	LOG_WRN("Failed to set security: %d", err);
-
-		gatt_discover(conn);
-	// }
+	gatt_discover(conn);
 
 	err = bt_scan_stop();
 	if ((!err) && (err != -EALREADY)) {
@@ -236,23 +204,22 @@ static void scan_connecting(struct bt_scan_device_info *device_info,
 	default_conn = bt_conn_ref(conn);
 }
 
-static int nus_client_init(void)
+static int cx_endpoint_client_init(void)
 {
 	int err;
-	struct bt_nus_client_init_param init = {
+	struct bt_cx_endpoint_client_init_param init = {
 		.cb = {
 			.received = ble_data_received,
-			.sent = ble_data_sent,
 		}
 	};
 
-	err = bt_nus_client_init(&nus_client, &init);
+	err = bt_cx_endpoint_client_init(&cx_endpoint_client, &init);
 	if (err) {
-		LOG_ERR("NUS Client initialization failed (err %d)", err);
+		LOG_ERR("CX_ENDPOINT Client initialization failed (err %d)", err);
 		return err;
 	}
 
-	LOG_INF("NUS Client module initialized");
+	LOG_INF("CX_ENDPOINT Client module initialized");
 	return err;
 }
 
@@ -330,7 +297,7 @@ static void button_changed(uint32_t button_state, uint32_t has_changed)
 	}
 
 	if( (has_changed & BUTTON_SEND_DATA) ){
-		err = bt_nus_client_send(&nus_client,(const uint8_t *)&button_state,1);
+		err = bt_cx_endpoint_client_send(&cx_endpoint_client,(const uint8_t *)&button_state,1);
 		LOG_INF("Send data result: %d",err);
 		dk_set_led(BTN_STATUS_LED,button_state);
 	}
@@ -385,13 +352,13 @@ void main(void)
 		return;
 	}
 
-	err = nus_client_init();
+	err = cx_endpoint_client_init();
 	if(err){
-		LOG_ERR("NUS Client init failed: %d",err);
+		LOG_ERR("CX_ENDPOINT Client init failed: %d",err);
 		return;
 	}
 
-	printk("Starting Bluetooth Central UART example\n");
+	printk("Starting Bluetooth Central CX Endpoint Client example\n");
 
 	for (;;) {
 		dk_set_led(RUN_STATUS_LED, (++blink_status) % 2);
