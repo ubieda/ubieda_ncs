@@ -1,0 +1,19 @@
+#
+# Copyright (c) 2019 Nordic Semiconductor ASA
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
+
+menuconfig BT_CX_ENDPOINT
+	bool "Led Button service"
+	select BT_CX_SERVICES
+	help
+	  Enable Led Button service.
+
+if BT_CX_ENDPOINT
+
+module = BT_CX_ENDPOINT
+module-str = CX_ENDPOINT
+source "${ZEPHYR_BASE}/subsys/logging/Kconfig.template.log_config"
+
+endif # BT_CX_ENDPOINT

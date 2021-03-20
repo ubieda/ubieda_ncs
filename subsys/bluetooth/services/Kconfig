@@ -1,0 +1,17 @@
+#
+# Copyright (c) 2019 Nordic Semiconductor ASA
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
+
+menu "Bluetooth Services"
+
+config BT_CX_SERVICES
+	bool
+	help
+	  Common Bluetooth GATT Services support modules, required by all Croxel
+	  Services.
+
+rsource "Kconfig.cx_endpoint"
+
+endmenu
