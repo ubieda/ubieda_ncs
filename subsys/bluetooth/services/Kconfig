@@ -13,5 +13,6 @@ config BT_CX_SERVICES
 	  Services.
 
 rsource "Kconfig.cx_endpoint"
+rsource "Kconfig.cx_endpoint_client"
 
 endmenu

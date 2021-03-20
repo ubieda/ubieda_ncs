@@ -1,0 +1,19 @@
+#
+# Copyright (c) 2019 Nordic Semiconductor ASA
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
+
+menuconfig BT_CX_ENDPOINT_CLIENT
+	bool "CX Endpoint service client"
+	select BT_CX_SERVICES
+	help
+	  Enable CX Endpoint service client.
+
+if BT_CX_ENDPOINT_CLIENT
+
+module = BT_CX_ENDPOINT_CLIENT
+module-str = BT_CX_ENDPOINT_CLIENT
+source "${ZEPHYR_BASE}/subsys/logging/Kconfig.template.log_config"
+
+endif # BT_NUS_CLIENT

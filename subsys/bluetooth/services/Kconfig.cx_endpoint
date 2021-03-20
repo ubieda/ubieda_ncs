@@ -5,10 +5,10 @@
 #
 
 menuconfig BT_CX_ENDPOINT
-	bool "Led Button service"
+	bool "Enable CX Endpoint service"
 	select BT_CX_SERVICES
 	help
-	  Enable Led Button service.
+	  Enable CX Endpoint service.
 
 if BT_CX_ENDPOINT
 
