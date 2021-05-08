@@ -1,0 +1,1 @@
+zephyr_sources_ifdef(CONFIG_BASIC_MODULE basic_module.c)

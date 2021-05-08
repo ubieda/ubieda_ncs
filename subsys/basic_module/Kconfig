@@ -1,0 +1,10 @@
+
+menu "Basic Module"
+
+config BASIC_MODULE
+    bool
+    default y
+    help
+      Set up Basic Module with dummy operations to demonstrate libraries linking and setup
+
+endmenu

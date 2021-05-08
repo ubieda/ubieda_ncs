@@ -6,3 +6,4 @@
 
 
 rsource "bluetooth/Kconfig"
+rsource "basic_module/Kconfig"

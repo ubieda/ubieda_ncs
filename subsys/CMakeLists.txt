@@ -7,3 +7,7 @@
 if (CONFIG_BT)
   add_subdirectory(bluetooth)
 endif()
+
+if (CONFIG_BASIC_MODULE)
+  add_subdirectory(basic_module)
+endif()
