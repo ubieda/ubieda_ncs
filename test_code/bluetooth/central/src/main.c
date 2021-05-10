@@ -45,8 +45,6 @@ static struct bt_cx_endpoint_client cx_endpoint_client;
 
 static uint8_t ble_data_received(const uint8_t *const data, uint16_t len)
 {
-	int err;
-
 	LOG_INF("Received data - len: %d",len);
 	LOG_HEXDUMP_INF(data,len,"received_data");
 
@@ -142,8 +140,7 @@ static void connected(struct bt_conn *conn, uint8_t conn_err)
 static void disconnected(struct bt_conn *conn, uint8_t reason)
 {
 	char addr[BT_ADDR_LE_STR_LEN];
-	int err;
-
+	
 	bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
 
 	LOG_INF("Disconnected: %s (reason %u)", log_strdup(addr),

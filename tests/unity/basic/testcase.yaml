@@ -1,0 +1,5 @@
+tests:
+  unity.basic_module_test:
+    platform_allow: native_posix
+    build_on_all: True
+    tags: basic

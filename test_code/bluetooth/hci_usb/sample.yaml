@@ -1,0 +1,8 @@
+sample:
+  name: Bluetooth USB HCI 
+tests:
+  test_code.bluetooth.usb_hci:
+    build_only: true
+    build_on_all: true
+    platform_allow: nrf52840dongle_nrf52840
+    tags: ci_build
