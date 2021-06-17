@@ -1,0 +1,2 @@
+config PWM_DUAL
+    bool "Enable PWM Dual driver"

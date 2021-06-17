@@ -10,3 +10,4 @@ set(UBIEDA_NCS_DIR ${CMAKE_CURRENT_LIST_DIR} CACHE PATH "Ubieda's NCS root direc
 zephyr_include_directories(include)
 
 add_subdirectory(subsys)
+add_subdirectory(drivers)

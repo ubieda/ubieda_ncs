@@ -7,5 +7,6 @@
 menu "Ubieda's NCS"
 
 rsource "subsys/Kconfig"
+rsource "drivers/Kconfig"
 
 endmenu
